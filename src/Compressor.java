@@ -47,30 +47,8 @@ public class Compressor
                 s = ch;
                 nextCode++;
             }
+            i++;
         }
         output.add(table.get(s));
-        /*
-        String p = String.valueOf(input.charAt(0));
-        String c = "";
-
-        for (int i = 1; i < input.length(); i++)
-        {
-            c = String.valueOf(input.charAt(i));
-
-            if (table.containsKey(p + c))
-                p = p + c;
-            else
-            {
-                output.add(table.get(p));
-                table.put(p + c, nextCode);
-                p = c;
-            }
-            nextCode++;
-        }
-        output.add(table.get(p));
-         */
     }
-
-
-
 }
