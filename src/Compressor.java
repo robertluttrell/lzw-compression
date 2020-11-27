@@ -52,4 +52,6 @@ public class Compressor
         }
         output.add(table.get(s));
     }
+
+    public List<Integer> getOutput() { return this.output; }
 }

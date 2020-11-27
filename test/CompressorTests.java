@@ -1,6 +1,9 @@
 import org.junit.Test;
 import org.junit.Assert;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class CompressorTests
 {
     @Test
@@ -9,6 +12,7 @@ public class CompressorTests
         String s = "BABAABAAA";
         Compressor c = new Compressor(s, 4096);
         c.compress();
-        System.out.println("");
+        List<Integer> expected = Arrays.asList(66, 65, 256, 257, 65, 260);
+        Assert.assertEquals(expected, c.getOutput());
     }
 }
