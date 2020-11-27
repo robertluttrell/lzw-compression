@@ -34,7 +34,7 @@ public class Decompressor
         output = table.get(oldCode);
         int i = 1;
         String s;
-        String c = "";
+        String c = table.get(oldCode);
 
         while (i < input.size())
         {
