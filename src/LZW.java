@@ -1,23 +1,32 @@
 import org.apache.commons.cli.*;
 
+import java.util.List;
+
 
 public class LZW
 {
 
     private static void compressFiles(String[] fileNames)
     {
-        System.out.println("Compress:");
-        for (String s : fileNames)
-            System.out.println(s);
-        /* TODO: iterative call to Compressor.compress(). Print stats */
+        for (String fileName : fileNames)
+        {
+            String input = IO.readAllBytesFromFile(fileName);
+            Compressor c = new Compressor(input, 4096);
+            c.compress();
+            IO.writeCodesToFile(c.getOutput(), fileName);
+
+        }
     }
 
     private static void decompressFiles(String[] fileNames)
     {
-        System.out.println("Decompress:");
-        for (String s : fileNames)
-            System.out.println(s);
-        /* TODO: iterative call to Decompressor.decompress() */
+        for (String fileName : fileNames)
+        {
+            List<Integer> input = IO.readCodesFromFile(fileName);
+            Decompressor d = new Decompressor(input, 4096);
+            d.decompress();
+            IO.writeStringToFile(d.getOutput(), fileName);
+        }
     }
 
     public static void main(String[] args)
