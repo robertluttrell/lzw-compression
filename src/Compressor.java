@@ -15,7 +15,6 @@ public class Compressor
         this.input = input;
         this.tableSize = tableSize;
         this.output = new ArrayList<>();
-        initializeTable();
         this.nextCode = 256;
     }
 
@@ -34,6 +33,8 @@ public class Compressor
         String s = "";
         int i = 0;
         String ch;
+
+        initializeTable();
 
         while (i < input.length())
         {
