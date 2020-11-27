@@ -15,19 +15,26 @@ public class LZW
                 .required()
                 .build();
 
+        Option inputFiles = Option.builder("files")
+                .argName("input files")
+                .desc("File(s) to be compressed or decompressed")
+                .hasArgs()
+                .required()
+                .build();
+
         options.addOption(mode);
+        options.addOption(inputFiles);
         HelpFormatter formatter = new HelpFormatter();
 
         try
         {
             CommandLine line = parser.parse(options, args);
-            if (line.hasOption("mode"))
-                if (!(line.getOptionValue("mode").equals("compress")))
-                    formatter.printHelp("lzw", options);
+            if (!(line.getOptionValue("mode").equals("compress") || line.getOptionValue("mode").equals("decompress")))
+                formatter.printHelp("lzw", options);
         }
         catch (ParseException e)
         {
-            e.printStackTrace();
+            formatter.printHelp("lzw", options);
         }
 
 
