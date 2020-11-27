@@ -31,7 +31,8 @@ public class Decompressor
     {
         initializeTable();
         int oldCode = input.get(0);
-        output = table.get(oldCode);
+        StringBuilder buffer = new StringBuilder();
+        buffer.append(table.get(oldCode));
         int i = 1;
         String s;
         String c = table.get(oldCode);
@@ -47,13 +48,14 @@ public class Decompressor
 
             else
                 s = table.get(newCode);
-            output += s;
+            buffer.append(s);
             c = String.valueOf(s.charAt(0));
             table.put(nextCode, table.get(oldCode) + c);
             oldCode = newCode;
             nextCode++;
             i++;
         }
+        output = buffer.toString();
     }
 
     public String getOutput() { return this.output; }

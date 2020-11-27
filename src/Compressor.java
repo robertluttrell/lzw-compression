@@ -39,6 +39,10 @@ public class Compressor
         while (i < input.length())
         {
             ch = String.valueOf(input.charAt(i));
+            if (ch.equals("")) {
+                i++;
+                continue;
+            }
             if (table.containsKey(s + ch))
                 s = s + ch;
             else

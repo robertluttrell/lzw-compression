@@ -1,6 +1,7 @@
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,8 +15,7 @@ public class IO
 
         try
         {
-            content = new String(Files.readAllBytes(Paths.get(filePath)));
-
+            content = Files.readString(Path.of(filePath));
         }
         catch (IOException e)
         {
@@ -38,7 +38,6 @@ public class IO
                 byte[] fourBytes = Arrays.copyOfRange(rawBytes, i, i + 4);
                 int newInt = ByteBuffer.wrap(fourBytes).getInt();
                 codes.add(newInt);
-                System.out.println(newInt);
                 i += 4;
             }
         }
@@ -52,14 +51,12 @@ public class IO
 
     public static void writeCodesToFile(List<Integer> codes, String filePath)
     {
-        String outputPath = filePath + ".compress";
         try
         {
-            OutputStream os = new FileOutputStream(new File(outputPath));
+            OutputStream os = new FileOutputStream(new File(filePath));
             for (int i : codes)
             {
                 byte[] bytes = ByteBuffer.allocate(4).putInt(i).array();
-                System.out.println(Arrays.toString(bytes));
                 os.write(bytes);
             }
 
@@ -72,10 +69,9 @@ public class IO
 
     public static void writeStringToFile(String outputString, String filePath)
     {
-        String outputPath = filePath + ".decompress";
         try
         {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
             writer.write(outputString);
             writer.close();
         }

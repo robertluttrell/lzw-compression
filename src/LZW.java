@@ -1,10 +1,25 @@
 import org.apache.commons.cli.*;
 
+import java.io.File;
 import java.util.List;
 
 
 public class LZW
 {
+
+    private static void printStats(String originalPath, String compressedPath)
+    {
+        File origFile = new File(originalPath);
+        File compressedFile = new File(compressedPath);
+
+        long origLength = origFile.length();
+        long compressedLength = compressedFile.length();
+
+        System.out.println("Compressed file: " + originalPath);
+        System.out.println("Original size: " + origLength + " bytes");
+        System.out.println("Compress size: " + compressedLength + " bytes");
+        System.out.println("Compression ratio: " + (double) compressedLength / origLength);
+    }
 
     private static void compressFiles(String[] fileNames)
     {
@@ -13,8 +28,8 @@ public class LZW
             String input = IO.readAllBytesFromFile(fileName);
             Compressor c = new Compressor(input, 4096);
             c.compress();
-            IO.writeCodesToFile(c.getOutput(), fileName);
-
+            IO.writeCodesToFile(c.getOutput(), fileName + ".compress");
+            printStats(fileName, fileName + ".compress");
         }
     }
 
@@ -25,7 +40,7 @@ public class LZW
             List<Integer> input = IO.readCodesFromFile(fileName);
             Decompressor d = new Decompressor(input, 4096);
             d.decompress();
-            IO.writeStringToFile(d.getOutput(), fileName);
+            IO.writeStringToFile(d.getOutput(), fileName + ".decompress");
         }
     }
 
