@@ -6,16 +6,15 @@ public class Compressor
 {
     private String input;
     private ArrayList<Integer> output;
-    private int tableSize;
+    private int maxTableSize;
     private HashMap<String, Integer> table;
     private int nextCode;
 
-    public Compressor(String input, int tableSize)
+    public Compressor(String input, int maxTableSize)
     {
         this.input = input;
-        this.tableSize = tableSize;
+        this.maxTableSize = maxTableSize;
         this.output = new ArrayList<>();
-        this.nextCode = 256;
     }
 
     private void initializeTable()
@@ -26,6 +25,7 @@ public class Compressor
             char c = (char) i;
             table.put(String.valueOf(c), i);
         }
+        nextCode = 256;
     }
 
     public void compress()
@@ -38,6 +38,9 @@ public class Compressor
 
         while (i < input.length())
         {
+            if (table.size() >= maxTableSize)
+                initializeTable();
+
             ch = String.valueOf(input.charAt(i));
             if (ch.equals("")) {
                 i++;

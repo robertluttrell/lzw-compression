@@ -5,16 +5,15 @@ import java.util.List;
 public class Decompressor
 {
     private List<Integer> input;
-    private int tableSize;
+    private int maxTableSize;
     private String output;
     private HashMap<Integer, String> table;
     private int nextCode;
 
-    public Decompressor(List<Integer> input, int tableSize)
+    public Decompressor(List<Integer> input, int maxTableSize)
     {
         this.input = input;
-        this.tableSize = tableSize;
-        this.nextCode = 256;
+        this.maxTableSize = maxTableSize;
     }
 
     private void initializeTable()
@@ -25,6 +24,7 @@ public class Decompressor
             char c = (char) i;
             table.put(i, String.valueOf(c));
         }
+        nextCode = 256;
     }
 
     public void decompress()
@@ -39,6 +39,9 @@ public class Decompressor
 
         while (i < input.size())
         {
+            if (table.size() >= maxTableSize)
+                initializeTable();
+
             int newCode = input.get(i);
             if (!(table.containsKey(newCode)))
             {
