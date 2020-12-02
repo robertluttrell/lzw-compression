@@ -5,6 +5,7 @@ import java.util.List;
 public class Decompressor
 {
     private List<Byte> input;
+    private int numBytesInFile;
     private List<Byte> outputList;
     private int buffer;
     private int numBitsInBuffer;
@@ -23,6 +24,7 @@ public class Decompressor
         this.numBitsInBuffer = 0;
         this.numBytesRead = 0;
         this.outputList = new ArrayList<>();
+        this.numBytesInFile = input.size();
     }
 
     private void initializeTable()
@@ -40,8 +42,10 @@ public class Decompressor
     private void addCodeToBuffer()
     {
         buffer <<= 8;
-        buffer += input.get(0);
-        input.remove(0);
+        int oneByteMask = 0xFF;
+
+        buffer += (input.get(numBytesRead) & oneByteMask);
+
         numBytesRead++;
         numBitsInBuffer += 8;
     }
@@ -73,13 +77,16 @@ public class Decompressor
         String s;
         String c = table.get(oldCode);
 
-        while (numBytesRead < input.size())
+        while (numBytesRead < numBytesInFile)
         {
             if (table.size() >= maxTableSize)
                 initializeTable();
 
-            if (nextCode > Math.pow(2.0, numBits))
+            if (nextCode > Math.pow(2.0, numBits)) {
                 numBits += 1;
+                output = builder.toString();
+                return;
+            }
 
             int newCode = getCode();
             if (!(table.containsKey(newCode)))

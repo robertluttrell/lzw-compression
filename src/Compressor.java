@@ -15,6 +15,7 @@ public class Compressor
     private HashMap<String, Integer> table;
     private int nextCode;
     private int numBitsInBuffer;
+    private List<Integer> rawCodes;
 
     public Compressor(String input, int maxTableSize)
     {
@@ -23,6 +24,7 @@ public class Compressor
         this.output = new ArrayList<>();
         this.buffer = 0;
         this.numBitsInBuffer = 0;
+        this.rawCodes = new ArrayList<>();
     }
 
     private void initializeTable()
@@ -43,7 +45,7 @@ public class Compressor
         int mask = (int) Math.pow(2, 8) - 1;
         byte newByte = (byte) (byteInLSB & mask);
         //TODO: this is the wrong operation
-        buffer >>= 8;
+        buffer -= (newByte << (numBitsInBuffer - 8));
         numBitsInBuffer -= 8;
 
         output.add(newByte);
@@ -67,6 +69,7 @@ public class Compressor
 
     private void addCodeToOutput(int code)
     {
+        rawCodes.add(code);
         while (numBitsInBuffer > 8)
             writeByteFromBuffer();
 
