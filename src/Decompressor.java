@@ -44,7 +44,8 @@ public class Decompressor
         buffer <<= 8;
         int oneByteMask = 0xFF;
 
-        buffer += (input.get(numBytesRead) & oneByteMask);
+        if (numBytesRead < numBytesInFile)
+            buffer += (input.get(numBytesRead) & oneByteMask);
 
         numBytesRead++;
         numBitsInBuffer += 8;
@@ -82,11 +83,8 @@ public class Decompressor
             if (table.size() >= maxTableSize)
                 initializeTable();
 
-            if (nextCode > Math.pow(2.0, numBits)) {
+            if (nextCode >= Math.pow(2.0, numBits))
                 numBits += 1;
-                output = builder.toString();
-                return;
-            }
 
             int newCode = getCode();
             if (!(table.containsKey(newCode)))
