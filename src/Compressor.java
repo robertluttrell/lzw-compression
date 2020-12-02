@@ -42,6 +42,7 @@ public class Compressor
         int byteInLSB = buffer >> (numBitsInBuffer - 8);
         int mask = (int) Math.pow(2, 8) - 1;
         byte newByte = (byte) (byteInLSB & mask);
+        //TODO: this is the wrong operation
         buffer >>= 8;
         numBitsInBuffer -= 8;
 

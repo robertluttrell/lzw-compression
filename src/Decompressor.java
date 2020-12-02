@@ -5,8 +5,10 @@ import java.util.List;
 public class Decompressor
 {
     private List<Byte> input;
+    private List<Byte> outputList;
     private int buffer;
     private int numBitsInBuffer;
+    private int numBytesRead;
     private int numBits;
     private int maxTableSize;
     private String output;
@@ -19,6 +21,8 @@ public class Decompressor
         this.maxTableSize = maxTableSize;
         this.buffer = 0;
         this.numBitsInBuffer = 0;
+        this.numBytesRead = 0;
+        this.outputList = new ArrayList<>();
     }
 
     private void initializeTable()
@@ -33,22 +37,51 @@ public class Decompressor
         numBits = 9;
     }
 
+    private void addCodeToBuffer()
+    {
+        buffer <<= 8;
+        buffer += input.get(0);
+        input.remove(0);
+        numBytesRead++;
+        numBitsInBuffer += 8;
+    }
+
+    private int getCodeFromBuffer()
+    {
+        int code = buffer >> (numBitsInBuffer - numBits);
+        buffer -= (code << (numBitsInBuffer - numBits));
+        numBitsInBuffer -= numBits;
+        return code;
+    }
+
+    private int getCode()
+    {
+        while (numBitsInBuffer < numBits)
+            addCodeToBuffer();
+
+        return getCodeFromBuffer();
+    }
+
     public void decompress()
     {
         initializeTable();
-        int oldCode = input.get(0);
+//        int oldCode = input.get(0);
+        int oldCode = getCode();
         StringBuilder builder = new StringBuilder();
         builder.append(table.get(oldCode));
         int i = 1;
         String s;
         String c = table.get(oldCode);
 
-        while (i < input.size())
+        while (numBytesRead < input.size())
         {
             if (table.size() >= maxTableSize)
                 initializeTable();
 
-            int newCode = input.get(i);
+            if (nextCode > Math.pow(2.0, numBits))
+                numBits += 1;
+
+            int newCode = getCode();
             if (!(table.containsKey(newCode)))
             {
                 s = table.get(oldCode);
