@@ -26,7 +26,7 @@ public class LZW
         for (String fileName : fileNames)
         {
             String input = IO.readAllBytesFromFileAsString(fileName);
-            Compressor c = new Compressor(input, 4096);
+            Compressor c = new Compressor(input, 409600000);
             c.compress();
             IO.writeBytesToFile(c.getOutputArr(), fileName + ".compress");
             printStats(fileName, fileName + ".compress");
@@ -39,7 +39,7 @@ public class LZW
         {
             byte[] inputArr = IO.readAllBytesFromFile(fileName);
             List<Byte> inputList = LZWUtils.byteArrToByteList(inputArr);
-            Decompressor d = new Decompressor(inputList, 4096);
+            Decompressor d = new Decompressor(inputList, 409600000);
             d.decompress();
             IO.writeStringToFile(d.getOutput(), fileName + ".decompress");
         }
