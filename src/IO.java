@@ -49,19 +49,15 @@ public class IO
         return codes;
     }
 
-    public static void writeCodesToFile(List<Integer> codes, String filePath)
+    public static void writeBytesToFile(byte[] bytes, String filePath)
     {
+        File outputFile = new File(filePath);
         try
         {
-            OutputStream os = new FileOutputStream(new File(filePath));
-            for (int i : codes)
-            {
-                byte[] bytes = ByteBuffer.allocate(4).putInt(i).array();
-                os.write(bytes);
-            }
-
+            OutputStream os = new FileOutputStream(outputFile);
+            os.write(bytes);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

@@ -10,6 +10,7 @@ public class Compressor
     private int buffer;
     private int numBits;
     private ArrayList<Byte> output;
+    private byte[] outputArr;
     private int maxTableSize;
     private HashMap<String, Integer> table;
     private int nextCode;
@@ -39,8 +40,20 @@ public class Compressor
     private void writeByteFromBuffer()
     {
         int byteInLSB = buffer >> (numBitsInBuffer - 8);
-        int mask;
+        int mask = (int) Math.pow(2, 8) - 1;
+        byte newByte = (byte) (byteInLSB & mask);
+        buffer >>= 8;
+        numBitsInBuffer -= 8;
 
+        output.add(newByte);
+    }
+
+    private void writeLastByteFromBuffer()
+    {
+        int mask = (int) Math.pow(2, 8) - 1;
+        int lastBitsMSBByte = buffer << (8 - numBitsInBuffer);
+        byte lastByte = (byte) (lastBitsMSBByte & mask);
+        output.add(lastByte);
     }
 
     private void addCodeToBuffer(int code)
@@ -57,9 +70,22 @@ public class Compressor
             writeByteFromBuffer();
 
         addCodeToBuffer(code);
-
     }
 
+    private void emptyBufferToOutput()
+    {
+        while (numBitsInBuffer > 8)
+            writeByteFromBuffer();
+
+        writeLastByteFromBuffer();
+    }
+
+    private void convertOutputToArr()
+    {
+        outputArr = new byte[output.size()];
+        for (int i = 0; i < output.size(); i++)
+            outputArr[i] = output.get(i);
+    }
     public void compress()
     {
         String s = "";
@@ -93,7 +119,11 @@ public class Compressor
             i++;
         }
         addCodeToOutput(table.get(s));
+        emptyBufferToOutput();
+        convertOutputToArr();
     }
 
+
     public List<Byte> getOutput() { return this.output; }
+    public byte[] getOutputArr() { return this.outputArr; }
 }

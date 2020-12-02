@@ -28,7 +28,7 @@ public class LZW
             String input = IO.readAllBytesFromFile(fileName);
             Compressor c = new Compressor(input, 4096);
             c.compress();
-            IO.writeCodesToFile(c.getOutput(), fileName + ".compress");
+            IO.writeBytesToFile(c.getOutputArr(), fileName + ".compress");
             printStats(fileName, fileName + ".compress");
         }
     }
