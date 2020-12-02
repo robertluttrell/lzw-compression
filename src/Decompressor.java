@@ -4,16 +4,21 @@ import java.util.List;
 
 public class Decompressor
 {
-    private List<Integer> input;
+    private List<Byte> input;
+    private int buffer;
+    private int numBitsInBuffer;
+    private int numBits;
     private int maxTableSize;
     private String output;
     private HashMap<Integer, String> table;
     private int nextCode;
 
-    public Decompressor(List<Integer> input, int maxTableSize)
+    public Decompressor(List<Byte> input, int maxTableSize)
     {
         this.input = input;
         this.maxTableSize = maxTableSize;
+        this.buffer = 0;
+        this.numBitsInBuffer = 0;
     }
 
     private void initializeTable()
@@ -25,14 +30,15 @@ public class Decompressor
             table.put(i, String.valueOf(c));
         }
         nextCode = 256;
+        numBits = 9;
     }
 
     public void decompress()
     {
         initializeTable();
         int oldCode = input.get(0);
-        StringBuilder buffer = new StringBuilder();
-        buffer.append(table.get(oldCode));
+        StringBuilder builder = new StringBuilder();
+        builder.append(table.get(oldCode));
         int i = 1;
         String s;
         String c = table.get(oldCode);
@@ -51,14 +57,14 @@ public class Decompressor
 
             else
                 s = table.get(newCode);
-            buffer.append(s);
+            builder.append(s);
             c = String.valueOf(s.charAt(0));
             table.put(nextCode, table.get(oldCode) + c);
             oldCode = newCode;
             nextCode++;
             i++;
         }
-        output = buffer.toString();
+        output = builder.toString();
     }
 
     public String getOutput() { return this.output; }

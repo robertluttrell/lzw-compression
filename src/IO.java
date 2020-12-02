@@ -9,7 +9,7 @@ import java.util.List;
 
 public class IO
 {
-    public static String readAllBytesFromFile(String filePath)
+    public static String readAllBytesFromFileAsString(String filePath)
     {
         String content = "";
 
@@ -23,6 +23,19 @@ public class IO
         }
 
         return content;
+    }
+
+    public static byte[] readAllBytesFromFile(String filePath)
+    {
+        try
+        {
+            return Files.readAllBytes(Paths.get(filePath));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static List<Integer> readCodesFromFile(String filePath)

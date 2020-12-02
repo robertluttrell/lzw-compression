@@ -80,12 +80,6 @@ public class Compressor
         writeLastByteFromBuffer();
     }
 
-    private void convertOutputToArr()
-    {
-        outputArr = new byte[output.size()];
-        for (int i = 0; i < output.size(); i++)
-            outputArr[i] = output.get(i);
-    }
     public void compress()
     {
         String s = "";
@@ -120,7 +114,7 @@ public class Compressor
         }
         addCodeToOutput(table.get(s));
         emptyBufferToOutput();
-        convertOutputToArr();
+        outputArr = LZWUtils.byteListToByteArr(output);
     }
 
 
