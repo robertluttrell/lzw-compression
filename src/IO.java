@@ -9,7 +9,7 @@ import java.util.List;
 
 public class IO
 {
-    public static String readAllBytesFromFile(String filePath)
+    public static String readAllBytesFromFileAsString(String filePath)
     {
         String content = "";
 
@@ -25,43 +25,28 @@ public class IO
         return content;
     }
 
-    public static List<Integer> readCodesFromFile(String filePath)
+    public static byte[] readAllBytesFromFile(String filePath)
     {
-        List<Integer> codes = new ArrayList<>();
-
         try
         {
-            byte[] rawBytes = Files.readAllBytes(Paths.get(filePath));
-            int i = 0;
-            while (i < rawBytes.length)
-            {
-                byte[] fourBytes = Arrays.copyOfRange(rawBytes, i, i + 4);
-                int newInt = ByteBuffer.wrap(fourBytes).getInt();
-                codes.add(newInt);
-                i += 4;
-            }
+            return Files.readAllBytes(Paths.get(filePath));
         }
         catch (IOException e)
         {
             e.printStackTrace();
+            return null;
         }
-
-        return codes;
     }
 
-    public static void writeCodesToFile(List<Integer> codes, String filePath)
+    public static void writeBytesToFile(byte[] bytes, String filePath)
     {
+        File outputFile = new File(filePath);
         try
         {
-            OutputStream os = new FileOutputStream(new File(filePath));
-            for (int i : codes)
-            {
-                byte[] bytes = ByteBuffer.allocate(4).putInt(i).array();
-                os.write(bytes);
-            }
-
+            OutputStream os = new FileOutputStream(outputFile);
+            os.write(bytes);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

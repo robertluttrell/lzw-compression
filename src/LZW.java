@@ -25,10 +25,10 @@ public class LZW
     {
         for (String fileName : fileNames)
         {
-            String input = IO.readAllBytesFromFile(fileName);
-            Compressor c = new Compressor(input, 4096);
+            String input = IO.readAllBytesFromFileAsString(fileName);
+            Compressor c = new Compressor(input, 409600000);
             c.compress();
-            IO.writeCodesToFile(c.getOutput(), fileName + ".compress");
+            IO.writeBytesToFile(c.getOutputArr(), fileName + ".compress");
             printStats(fileName, fileName + ".compress");
         }
     }
@@ -37,8 +37,9 @@ public class LZW
     {
         for (String fileName : fileNames)
         {
-            List<Integer> input = IO.readCodesFromFile(fileName);
-            Decompressor d = new Decompressor(input, 4096);
+            byte[] inputArr = IO.readAllBytesFromFile(fileName);
+            List<Byte> inputList = LZWUtils.byteArrToByteList(inputArr);
+            Decompressor d = new Decompressor(inputList, 409600000);
             d.decompress();
             IO.writeStringToFile(d.getOutput(), fileName + ".decompress");
         }
