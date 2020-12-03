@@ -6,7 +6,6 @@ public class Decompressor
 {
     private List<Byte> input;
     private int numBytesInFile;
-    private List<Byte> outputList;
     private int buffer;
     private int numBitsInBuffer;
     private int numBytesRead;
@@ -23,7 +22,6 @@ public class Decompressor
         this.buffer = 0;
         this.numBitsInBuffer = 0;
         this.numBytesRead = 0;
-        this.outputList = new ArrayList<>();
         this.numBytesInFile = input.size();
     }
 
@@ -70,11 +68,9 @@ public class Decompressor
     public void decompress()
     {
         initializeTable();
-//        int oldCode = input.get(0);
         int oldCode = getCode();
         StringBuilder builder = new StringBuilder();
         builder.append(table.get(oldCode));
-        int i = 1;
         String s;
         String c = table.get(oldCode);
 
@@ -100,7 +96,6 @@ public class Decompressor
             table.put(nextCode, table.get(oldCode) + c);
             oldCode = newCode;
             nextCode++;
-            i++;
         }
         output = builder.toString();
     }

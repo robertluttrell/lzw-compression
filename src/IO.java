@@ -38,30 +38,6 @@ public class IO
         }
     }
 
-    public static List<Integer> readCodesFromFile(String filePath)
-    {
-        List<Integer> codes = new ArrayList<>();
-
-        try
-        {
-            byte[] rawBytes = Files.readAllBytes(Paths.get(filePath));
-            int i = 0;
-            while (i < rawBytes.length)
-            {
-                byte[] fourBytes = Arrays.copyOfRange(rawBytes, i, i + 4);
-                int newInt = ByteBuffer.wrap(fourBytes).getInt();
-                codes.add(newInt);
-                i += 4;
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return codes;
-    }
-
     public static void writeBytesToFile(byte[] bytes, String filePath)
     {
         File outputFile = new File(filePath);
